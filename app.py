@@ -6,13 +6,21 @@ def main():
 def jogar():
     minha_palavra = recuperaPalavra()
     meu_palpite = escondePalavra(minha_palavra)
+    palpites = []
+
     while(True):
         print(meu_palpite)
-        letra = input('\nUma letra: \n') 
+        letra = input('\nUma letra: ') 
+        palpites.append(letra)
+        print('Palpites dados: ', end='')
+        print(palpites)
         meu_palpite = palpite(letra, minha_palavra, meu_palpite)
+
         if acertou(meu_palpite) == 'exit':
+            print(meu_palpite)
             break
     print('Parabéns, você acertou!!')
+
     return
 
 def recuperaPalavra():    
@@ -41,9 +49,6 @@ def palpite(letra, palavra, palavra_escondida):
             index = palavra.find(letra, index + 1)
             indexes.append(index)
         palavra_atual = descobrePalavra(indexes, letra, palavra_escondida)
-
-    else:
-        print('A letra ' + letra + ' não pertence à palavra misteriosa\n' + palavra_escondida)
     
     return palavra_atual
     
