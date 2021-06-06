@@ -1,14 +1,30 @@
-import random
+import random, time, os
+from cadastro import cadastrarUsuario, lerPalavras
+from login import logar
 
 def main():
+    entrarSistema()
+    os.system('cls' if os.name == 'nt' else 'clear')
     jogar()
 
+def entrarSistema():
+    while(True):
+        opcao = input('1 - Fazer login\n2 - Fazer cadastro\n')
+        switcher = {
+            0: logar,
+            1: cadastrarUsuario
+        }
+        if switcher[int(opcao)-1]():
+            break
+    return
+
 def jogar():
-    minha_palavra = recuperaPalavra()
+    minha_palavra, minha_dica = recuperaPalavra()
     meu_palpite = escondePalavra(minha_palavra)
     palpites = []
 
     while(True):
+        print('A dica é: ' + minha_dica)
         print(meu_palpite)
         letra = input('\nUma letra: ') 
         palpites.append(letra)
@@ -16,18 +32,21 @@ def jogar():
         print(palpites)
         meu_palpite = palpite(letra, minha_palavra, meu_palpite)
 
-        if acertou(meu_palpite) == 'exit':
-            print(meu_palpite)
-            break
-    print('Parabéns, você acertou!!')
+        if lancar_contagem(meu_palpite):
+            if palpite_palavra(meu_palpite) == minha_palavra:
+                print('Parabéns, você acertou!!')
+                return
+            else:
+                print(f'Você errou! A palavra correta era {minha_palavra}')
+                return
 
-    return
+def recuperaPalavra():   
+    dict_palavras = lerPalavras()
+    minha_chave = list(dict_palavras)[random.randint(0, len(list(dict_palavras))-1)]
 
-def recuperaPalavra():    
-    lista_palavras = ['mesa']
-    randomico = random.randint(0, len(lista_palavras)-1) 
+    palavra_dica = (dict_palavras[minha_chave]['nome'], dict_palavras[minha_chave]['dica']) 
 
-    return lista_palavras[randomico]
+    return (palavra_dica)
 
 def escondePalavra(palavra):
     palavra_escondida = ''
@@ -58,8 +77,23 @@ def descobrePalavra(indexes, letra, palavra_escondida):
 
     return palavra_escondida
 
-def acertou(palavra):
-    if palavra.find('_') == -1: return 'exit'
+def lancar_contagem(palavra):
+    if palavra.count('_') <= 3:
+        return True
+
+def palpite_palavra(palavra_palpite):
+    if palavra_palpite.count('_') <= 3:
+        print(palavra_palpite)
+        sec = 5
+
+        while(sec != 0):
+            print(f'\nTempo: {sec}s')
+            sec -= 1
+            time.sleep(1)
+
+        resposta = input('A palavra misteriosa é: ')
+
+        return resposta
 
 if __name__ == "__main__":
     main()
