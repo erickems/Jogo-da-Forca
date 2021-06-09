@@ -2,16 +2,16 @@
 # encoding: iso-8859-1
 # encoding: win-1252
 
-import os, json
+import os, json, time
 
 def cadastrarUsuario():
     d1 = lerUsuarios()
 
-    login = input('Digite o login: ')
-    senha = input('Defina uma senha: ')
+    login = input('\nDigite seu novo login: ')
 
-    if exists(login, d1): print('Usuário já cadastrado'); return False
+    if exists(login, d1): print('Usuário já cadastrado!'); time.sleep(0.7); os.system('cls' if os.name == 'nt' else 'clear'); return False
     else: 
+        senha = input('Defina uma senha: ')
         d1[login] = {
             'login': login,
             'senha': senha
