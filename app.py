@@ -1,22 +1,15 @@
 import random, time, os
-from cadastro import cadastrarUsuario, lerPalavras
-from login import logar
+from cadastro import lerPalavras
+from interface import entrarSistema, jogarNovamente
 
 def main():
     entrarSistema()
     os.system('cls' if os.name == 'nt' else 'clear')
-    jogar()
-
-def entrarSistema():
-    while(True):
-        opcao = input('1 - Fazer login\n2 - Fazer cadastro\n')
-        switcher = {
-            0: logar,
-            1: cadastrarUsuario
-        }
-        if switcher[int(opcao)-1]():
-            break
-    return
+    entrada = 1
+    while (int(entrada) != 2):
+        jogar()
+        time.sleep(0.7)
+        entrada = jogarNovamente()
 
 def jogar():
     minha_palavra, minha_dica = recuperaPalavra()
@@ -42,11 +35,18 @@ def jogar():
 
 def recuperaPalavra():   
     dict_palavras = lerPalavras()
-    minha_chave = list(dict_palavras)[random.randint(0, len(list(dict_palavras))-1)]
+    lista_numeros_sorteados = []
+    i = -1
+    
+    while(i != len(list(dict_palavras))):
+        numero_aleatorio = random.randint(0, len(list(dict_palavras))-1)
 
-    palavra_dica = (dict_palavras[minha_chave]['nome'], dict_palavras[minha_chave]['dica']) 
-
-    return (palavra_dica)
+        if numero_aleatorio not in lista_numeros_sorteados: 
+            i += 1
+            lista_numeros_sorteados.append(numero_aleatorio)
+            minha_chave = list(dict_palavras)[numero_aleatorio]
+            palavra_e_dica = (dict_palavras[minha_chave]['nome'], dict_palavras[minha_chave]['dica']) 
+            return (palavra_e_dica)
 
 def escondePalavra(palavra):
     palavra_escondida = ''
@@ -87,10 +87,13 @@ def palpite_palavra(palavra_palpite):
         sec = 5
 
         while(sec != 0):
+            os.system('cls' if os.name == 'nt' else 'clear')
             print(f'\nTempo: {sec}s')
             sec -= 1
             time.sleep(1)
 
+        os.system('cls' if os.name == 'nt' else 'clear')
+        print(palavra_palpite)
         resposta = input('A palavra misteriosa é: ')
 
         return resposta
